@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MinusIcon, PlusIcon } from '../../assets/icons/Icons.tsx';
+import { MinusIcon, PlusIcon } from 'shared/assets/icons';
 
 type TreeNode = {
   id: number;
