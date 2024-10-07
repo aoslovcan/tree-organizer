@@ -1,1 +1,1 @@
-export { OnboardingLayout } from './layouts/OnboardingLayout/OnboardingLayout';
+export { TreeView } from './TreeView/TreeView';
