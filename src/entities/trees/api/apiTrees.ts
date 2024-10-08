@@ -1,5 +1,5 @@
 import { baseApi, TREES_TAG } from 'shared/api';
-import { TreeNodeType } from 'entities/trees';
+import { RequestBody, TreeNodeType } from 'entities/trees';
 export const apiTrees = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getTrees: build.query<Array<TreeNodeType>>({
@@ -10,9 +10,19 @@ export const apiTrees = baseApi.injectEndpoints({
       }),
 
       providesTags: [TREES_TAG]
+    }),
+
+    newTree: build.mutation<Array<TreeNodeType>, { id: string; body: RequestBody }>({
+      query: ({ id, body }) => ({
+        url: `/${id}/children`,
+        method: 'POST',
+        body
+      }),
+
+      invalidTags: [TREES_TAG]
     })
   })
 });
 
 // Correctly export the hook for the query
-export const { useGetTreesQuery } = apiTrees;
+export const { useGetTreesQuery, useNewTreeMutation } = apiTrees;

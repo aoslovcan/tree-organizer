@@ -3,3 +3,7 @@ export interface TreeNodeType {
   name: string;
   children: TreeNodeType[]; // Array of child node ids
 }
+
+export type RequestBody = {
+  childName: string;
+};
