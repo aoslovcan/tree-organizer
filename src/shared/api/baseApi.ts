@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { env } from 'shared/lib';
 import { CLIENT_TAG, TREES_TAG } from './tags.ts';
 

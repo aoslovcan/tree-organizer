@@ -20,10 +20,10 @@ export const TreeView = ({ node, index = 0 }: TreeViewProps) => {
   const toggleExpand = () => setExpanded(!expanded);
 
   return (
-    <DroppableItem droppableId={`${node.name}-${node?.id.toString()}`} type="NODE">
+    <DroppableItem droppableId={`${node.name}--${node?.id.toString()}`} type="NODE">
       <div className="px-6">
         {/* Node label and expand/collapse icon */}
-        <DraggableItem draggableId={`first-${node.id.toString()}`} index={index}>
+        <DraggableItem draggableId={`first--${node.id.toString()}`} index={index}>
           <div className="flex flex-row items-center gap-2" onClick={toggleExpand}>
             {node.children &&
               (expanded ? (

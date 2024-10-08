@@ -1,56 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trees } from 'features/Trees';
+import { useGetTreesQuery } from 'entities/trees';
 export const HomePage = () => {
-  const [treeData, setTreeData] = useState([
-    {
-      id: 1,
-      name: 'Root',
-      children: [
-        {
-          id: 2,
-          name: 'Child 1',
-          children: [
-            { id: 5, name: 'Grandchild 1', children: [] },
-            { id: 6, name: 'Grandchild 2', children: [] }
-          ]
-        },
-        {
-          id: 3,
-          name: 'Child 2',
-          children: []
-        },
-        {
-          id: 4,
-          name: 'Child 3',
-          children: [{ id: 7, name: 'Grandchild 3', children: [] }]
-        }
-      ]
-    },
-    {
-      id: 2905395,
-      name: 'Root 2',
-      children: [
-        {
-          id: 1432424,
-          name: 'Child 1',
-          children: [
-            { id: 53920930, name: 'Grandchild 1', children: [] },
-            { id: 695439053, name: 'Grandchild 2', children: [] }
-          ]
-        },
-        {
-          id: 343434,
-          name: 'Child 2',
-          children: []
-        },
-        {
-          id: 454545,
-          name: 'Child 3',
-          children: [{ id: 79543950934, name: 'Grandchild 3', children: [] }]
-        }
-      ]
-    }
-  ]);
+  const { data } = useGetTreesQuery();
+
+  const transformData = (data) => {
+    if (!data) return [];
+    const transform = (node) => {
+      // Use id if available, otherwise fall back to _id
+      return {
+        id: node.id || node._id, // Use `id` if present, otherwise fallback to `_id`
+        name: node.name,
+        children: node.children ? node.children.map((child) => transform(child)) : [] // Recursively transform children
+      };
+    };
+    // Apply transformation to the root data
+    return data.map((item) => transform(item));
+  };
+
+  const [treeData, setTreeData] = useState();
+  //
+  useEffect(() => {
+    setTreeData(transformData(data));
+  }, [data]);
+
   return (
     <div>
       <h1>Simple Tree View</h1>

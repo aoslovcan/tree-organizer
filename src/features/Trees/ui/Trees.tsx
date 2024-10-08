@@ -6,10 +6,10 @@ export const Trees = ({ data, handleData }) => {
   const findNodeById = (tree, id) => {
     for (const node of tree) {
       if (node.id === id) {
-        return node;
+        return node; // Found the node
       }
-      if (node.children) {
-        const foundNode = findNodeById(node.children, id);
+      if (node.children && node.children.length > 0) {
+        const foundNode = findNodeById(node.children, id); // Recursive call for children
         if (foundNode) {
           return foundNode;
         }
@@ -21,13 +21,15 @@ export const Trees = ({ data, handleData }) => {
   const removeNodeById = (tree, id) => {
     return tree.reduce((acc, node) => {
       if (node.id === id) {
-        return acc; // Skip the node to remove it
+        return acc; // Skip this node to effectively remove it
       }
-      const newNode = { ...node };
-      if (newNode.children) {
-        newNode.children = removeNodeById(newNode.children, id);
+
+      const newNode = { ...node }; // Create a shallow copy of the current node
+      if (newNode.children && newNode.children.length > 0) {
+        newNode.children = removeNodeById(newNode.children, id); // Recursively remove from children
       }
-      acc.push(newNode);
+
+      acc.push(newNode); // Push the updated node into the accumulator
       return acc;
     }, []);
   };
@@ -40,19 +42,14 @@ export const Trees = ({ data, handleData }) => {
     // Destructure the result
     const { source, destination } = result;
 
-    // Log the source and destination for debugging
-    console.log(source);
-    console.log(destination);
-
     // If the item is dropped in the same place, do nothing
     if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
 
     // Extract the ID from the droppableId
-    const draggedNodeId = parseInt(source.droppableId.split('-')[1]); // Extract ID from `name-id`
-    const destinationParentId = parseInt(destination.droppableId.split('-')[1]); // Extract ID from `name-id`
-
+    const draggedNodeId = source.droppableId.split('--')[1]; // Extract ID from `name-id`
+    const destinationParentId = destination.droppableId.split('--')[1]; // Extract ID from `name-id`
     // Create a shallow copy of the current tree data
     const newTreeData = [...data];
 
@@ -75,7 +72,7 @@ export const Trees = ({ data, handleData }) => {
   return (
     <DragAndDrop handleOnDragEnd={onDragAnd}>
       <div>
-        {data.map((rootNode, index) => (
+        {data?.map((rootNode, index) => (
           <TreeView key={rootNode.id} node={rootNode} index={index} />
         ))}
       </div>
