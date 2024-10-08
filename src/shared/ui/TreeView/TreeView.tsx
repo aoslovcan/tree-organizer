@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MinusIcon, PlusIcon } from 'shared/assets/icons';
 import { Button, DraggableItem, DroppableItem } from 'shared/ui';
+import { useModal } from '../../../app/modal';
 
 type TreeNode = {
   id: number;
@@ -11,9 +12,10 @@ type TreeNode = {
 interface TreeViewProps {
   node: TreeNode;
   index: number;
+  handleAddNew: ({ id: string }) => void;
 }
 
-export const TreeView = ({ node, index = 0 }: TreeViewProps) => {
+export const TreeView = ({ node, index = 0, handleAddNew }: TreeViewProps) => {
   const [expanded, setExpanded] = useState(false); // Control expand/collapse state
 
   // Toggle expand/collapse
@@ -43,7 +45,7 @@ export const TreeView = ({ node, index = 0 }: TreeViewProps) => {
           <>
             <Button
               label="Add new"
-              onClick={() => console.log(node.id)}
+              onClick={() => handleAddNew(node.id)}
               className="!bg-white !text-sm !font-normal"
               size="sm"
               iconAfter={<PlusIcon />}
@@ -52,7 +54,12 @@ export const TreeView = ({ node, index = 0 }: TreeViewProps) => {
             />
             <div>
               {node.children.map((childNode, childIndex) => (
-                <TreeView key={childNode.id} node={childNode} index={childIndex} />
+                <TreeView
+                  handleAddNew={handleAddNew}
+                  key={childNode.id}
+                  node={childNode}
+                  index={childIndex}
+                />
               ))}
             </div>
           </>
