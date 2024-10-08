@@ -1,6 +1,8 @@
 import express, { Application, Request, Response } from 'express';
 import TreeNode from '../models/TreeViews';
 import { v4 as uuidv4 } from 'uuid';
+import { TreeNodeType } from '../../../src/entities/trees';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 // Get all tree nodes
@@ -150,9 +152,6 @@ router.post('/:parentId/children', (req, res, next) => {
 
       // Add the new child node to the parent's children array
       parentNode?.children.push(newChild); // Store the new child's ID in the parent's children field
-
-      // Save the new child node to the database
-      await newChild.save();
 
       // Save the updated parent node with the new child reference
       await parentNode.save();

@@ -19,7 +19,7 @@ export const apiTrees = baseApi.injectEndpoints({
         body
       }),
 
-      invalidTags: [TREES_TAG]
+      invalidatesTags: [TREES_TAG]
     })
   })
 });

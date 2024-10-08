@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useAddNewTree } from '../../model/useAddNewTree.ts';
+import { useCallback } from 'react';
 
 const defaultValues = {
   childName: ''
@@ -20,8 +22,30 @@ export const useTreeForm = () => {
     resolver: yupResolver(schema)
   });
 
+  const childName = watch('childName');
+
+  const { addTree, isLoading } = useAddNewTree();
+
+  const handleAdd = useCallback(
+    (id: string) => {
+      if (childName) {
+        const body = {
+          childName: childName
+        };
+
+        addTree(body, id);
+      }
+    },
+    [childName]
+  );
+
+  const isValid = childName && Object.keys(errors).length === 0; // Ensure errors object is empty
+
   return {
     control,
-    errors
+    errors,
+    handleAdd,
+    isLoading,
+    isValid
   };
 };
