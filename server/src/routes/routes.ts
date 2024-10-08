@@ -141,16 +141,12 @@ router.post('/:parentId/children', (req, res, next) => {
         return res.status(404).json({ message: 'Parent node not found' });
       }
 
-      console.log('Parent', parentNode);
-
       // Create a new child node
       const newChild = new TreeNode({
         id: uuidv4(),
         name: childName
         //children: [] // Start with no children
       });
-
-      console.log(newChild);
 
       // Add the new child node to the parent's children array
       parentNode?.children.push(newChild); // Store the new child's ID in the parent's children field
