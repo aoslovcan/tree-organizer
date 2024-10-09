@@ -29,6 +29,7 @@ export const Trees = () => {
 
       {modals.newTreeModal && (
         <AddNewTreePopup
+          isRoot={false}
           isOpen={modals.newTreeModal}
           onCloseModal={() => closeModal('newTreeModal')}
           currentId={currentId}

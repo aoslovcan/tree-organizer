@@ -11,6 +11,7 @@ const defaultValues = {
 export const schema = yup.object().shape({
   childName: yup.string().min(5, 'It must contain at least 5 characters!')
 });
+
 export const useTreeForm = () => {
   const {
     control,
@@ -24,7 +25,7 @@ export const useTreeForm = () => {
 
   const childName = watch('childName');
 
-  const { addTree, isLoading } = useAddNewTree();
+  const { addTree, isLoading, addRootTree } = useAddNewTree();
 
   const handleAdd = useCallback(
     (id: string) => {
@@ -39,12 +40,23 @@ export const useTreeForm = () => {
     [childName]
   );
 
+  const handleAddRoot = useCallback(() => {
+    if (childName) {
+      const body = {
+        childName: childName
+      };
+
+      addRootTree(body);
+    }
+  }, [childName]);
+
   const isValid = childName && Object.keys(errors).length === 0; // Ensure errors object is empty
 
   return {
     control,
     errors,
     handleAdd,
+    handleAddRoot,
     isLoading,
     isValid
   };

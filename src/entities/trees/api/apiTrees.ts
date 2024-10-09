@@ -20,9 +20,19 @@ export const apiTrees = baseApi.injectEndpoints({
       }),
 
       invalidatesTags: [TREES_TAG]
+    }),
+
+    addRootTree: build.mutation<Array<TreeNodeType>, { body: RequestBody }>({
+      query: ({ body }) => ({
+        url: `/root`,
+        method: 'POST',
+        body
+      }),
+
+      invalidatesTags: [TREES_TAG]
     })
   })
 });
 
 // Correctly export the hook for the query
-export const { useGetTreesQuery, useNewTreeMutation } = apiTrees;
+export const { useGetTreesQuery, useNewTreeMutation, useAddRootTreeMutation } = apiTrees;

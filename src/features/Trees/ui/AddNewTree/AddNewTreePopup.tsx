@@ -5,10 +5,17 @@ import { useTreeForm } from './useTreeForm.ts';
 interface AddNewTreePopupProps {
   isOpen: boolean;
   onCloseModal: () => void;
-  currentId: string;
+  currentId?: string;
+  isRoot?: boolean;
 }
-export const AddNewTreePopup = ({ isOpen, onCloseModal, currentId }: AddNewTreePopupProps) => {
-  const { control, errors, handleAdd, isLoading, isValid } = useTreeForm();
+
+export const AddNewTreePopup = ({
+  isOpen,
+  onCloseModal,
+  currentId,
+  isRoot = false
+}: AddNewTreePopupProps) => {
+  const { control, errors, handleAdd, isLoading, isValid, handleAddRoot } = useTreeForm(isRoot);
 
   return (
     <Modal
@@ -23,7 +30,7 @@ export const AddNewTreePopup = ({ isOpen, onCloseModal, currentId }: AddNewTreeP
             shape="square"
             className="mb-4 w-full"
             disabled={!isValid}
-            onClick={() => handleAdd(currentId)}
+            onClick={() => (isRoot ? handleAddRoot() : handleAdd(currentId))}
             label="Dodaj"
             variant="contained"
             color="primary"

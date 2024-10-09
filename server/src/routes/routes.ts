@@ -171,5 +171,35 @@ router.post('/:parentId/children', (req, res, next) => {
       });
     });
 });
+router.post('/root', async (req, res) => {
+  const { childName } = req.body; // Extract new name from the request body
+
+  // Create a new object to be added
+  TreeNode.find()
+    .then(async (data) => {
+      const newChild = new TreeNode({
+        id: uuidv4(),
+        name: childName
+        //children: [] // Start with no children
+      });
+
+      data.push(newChild);
+
+      await TreeNode.deleteMany(); // Clear existing data
+      await TreeNode.insertMany(data);
+
+      return res.status(201).json({
+        message: 'Root node added successfully',
+        newChild: newChild
+      });
+    })
+    .catch((error) => {
+      // Handle errors here
+      console.error(error);
+      res.status(500).json({
+        message: error instanceof Error ? error.message : 'An unknown error occurred'
+      });
+    });
+});
 
 export default router;
