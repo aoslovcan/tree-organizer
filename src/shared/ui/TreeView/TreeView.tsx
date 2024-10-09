@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MinusIcon, PlusIcon } from 'shared/assets/icons';
+import { MinusIcon, PlusIcon, TrashIcon } from 'shared/assets/icons';
 import { Button, DraggableItem, DroppableItem } from 'shared/ui';
 import { useModal } from '../../../app/modal';
 
@@ -13,13 +13,23 @@ interface TreeViewProps {
   node: TreeNode;
   index: number;
   handleAddNew: ({ id: string }) => void;
+  handleDelete: ({ id: string }) => void;
+  isParent: boolean;
 }
 
-export const TreeView = ({ node, index = 0, handleAddNew }: TreeViewProps) => {
+export const TreeView = ({
+  node,
+  index = 0,
+  handleAddNew,
+  isParent,
+  handleDelete
+}: TreeViewProps) => {
   const [expanded, setExpanded] = useState(false); // Control expand/collapse state
 
   // Toggle expand/collapse
   const toggleExpand = () => setExpanded(!expanded);
+
+  console.log(node);
 
   return (
     <DroppableItem droppableId={`${node.name}--${node?.id.toString()}`} type="NODE">
@@ -37,30 +47,46 @@ export const TreeView = ({ node, index = 0, handleAddNew }: TreeViewProps) => {
                   <PlusIcon />
                 </span>
               ))}{' '}
-            {node.name}
+            {node.name}{' '}
+            {!isParent && (
+              <span
+                className="z-50"
+                onClick={() => {
+                  handleDelete(node.id, node.id);
+                }}>
+                <TrashIcon />
+              </span>
+            )}
           </div>
         </DraggableItem>
 
         {expanded && node.children && (
           <>
-            <Button
-              label="Add new"
-              onClick={() => handleAddNew(node.id)}
-              className="!bg-white !text-sm !font-normal"
-              size="sm"
-              iconAfter={<PlusIcon />}
-              shape="rounded"
-              variant="contained"
-            />
-            <div>
-              {node.children.map((childNode, childIndex) => (
-                <TreeView
-                  handleAddNew={handleAddNew}
-                  key={childNode.id}
-                  node={childNode}
-                  index={childIndex}
-                />
-              ))}
+            <div className="flex flex-row items-center gap-2">
+              <Button
+                label="Add new"
+                onClick={() => handleAddNew(node.id)}
+                className="!bg-white !text-sm !font-normal"
+                size="sm"
+                iconAfter={<PlusIcon />}
+                shape="rounded"
+                variant="contained"
+              />
+            </div>
+
+            <div className="flex flex-row">
+              <div className="flex flex-col">
+                {node.children.map((childNode, childIndex) => (
+                  <TreeView
+                    handleDelete={() => handleDelete(childNode.id.toString(), node.id.toString())}
+                    isParent={false}
+                    handleAddNew={handleAddNew}
+                    key={childNode.id}
+                    node={childNode}
+                    index={childIndex}
+                  />
+                ))}
+              </div>
             </div>
           </>
         )}

@@ -1,1 +1,1 @@
-export { MinusIcon, PlusIcon, LoaderIcon, CloseIcon } from './Icons';
+export { MinusIcon, PlusIcon, LoaderIcon, CloseIcon, TrashIcon } from './Icons';

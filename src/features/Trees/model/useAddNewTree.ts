@@ -1,10 +1,15 @@
-import { useAddRootTreeMutation, useNewTreeMutation } from 'entities/trees';
+import {
+  useAddRootTreeMutation,
+  useDeleteChildTreeMutation,
+  useNewTreeMutation
+} from 'entities/trees';
 import { useCallback } from 'react';
 import { useModal } from 'app/modal';
 
 export const useAddNewTree = () => {
   const [addNewTree, { isLoading }] = useNewTreeMutation();
   const [addRoot, { isLoading: loading }] = useAddRootTreeMutation();
+  const [deleteTree, { isLoading: isDeleting }] = useDeleteChildTreeMutation();
 
   const { closeModal } = useModal();
 
@@ -24,10 +29,15 @@ export const useAddNewTree = () => {
     }
   }, []);
 
+  const deleteChildTree = useCallback((id, parentId) => {
+    const res = deleteTree({ id: id, parentId: parentId });
+  }, []);
+
   return {
     addTree,
     isLoading,
     loading,
-    addRootTree
+    addRootTree,
+    deleteChildTree
   };
 };

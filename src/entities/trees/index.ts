@@ -1,2 +1,7 @@
 export type { TreeNodeType, RequestBody } from './model/types';
-export { useGetTreesQuery, useNewTreeMutation, useAddRootTreeMutation } from './api/apiTrees';
+export {
+  useGetTreesQuery,
+  useNewTreeMutation,
+  useAddRootTreeMutation,
+  useDeleteChildTreeMutation
+} from './api/apiTrees';

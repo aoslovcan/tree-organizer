@@ -30,9 +30,23 @@ export const apiTrees = baseApi.injectEndpoints({
       }),
 
       invalidatesTags: [TREES_TAG]
+    }),
+
+    deleteChildTree: build.mutation<Array<TreeNodeType>, { id: string; parentId: string }>({
+      query: ({ id, parentId }) => ({
+        url: `/${parentId}/${id}`,
+        method: 'DELETE'
+      }),
+
+      invalidatesTags: [TREES_TAG]
     })
   })
 });
 
 // Correctly export the hook for the query
-export const { useGetTreesQuery, useNewTreeMutation, useAddRootTreeMutation } = apiTrees;
+export const {
+  useGetTreesQuery,
+  useNewTreeMutation,
+  useAddRootTreeMutation,
+  useDeleteChildTreeMutation
+} = apiTrees;
