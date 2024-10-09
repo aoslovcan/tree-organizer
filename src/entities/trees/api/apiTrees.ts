@@ -1,5 +1,6 @@
 import { baseApi, TREES_TAG } from 'shared/api';
 import { RequestBody, TreeNodeType } from 'entities/trees';
+
 export const apiTrees = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getTrees: build.query<Array<TreeNodeType>>({
@@ -39,6 +40,18 @@ export const apiTrees = baseApi.injectEndpoints({
       }),
 
       invalidatesTags: [TREES_TAG]
+    }),
+
+    moveChildTree: build.mutation<
+      Array<TreeNodeType>,
+      { sourceRootId: string; childId: string; targetRootId: string }
+    >({
+      query: ({ sourceRootId, childId, targetRootId }) => ({
+        url: `/move-child/${sourceRootId}/${childId}/${targetRootId}`,
+        method: 'PATCH'
+      }),
+
+      invalidatesTags: [TREES_TAG]
     })
   })
 });
@@ -48,5 +61,6 @@ export const {
   useGetTreesQuery,
   useNewTreeMutation,
   useAddRootTreeMutation,
-  useDeleteChildTreeMutation
+  useDeleteChildTreeMutation,
+  useMoveChildTreeMutation
 } = apiTrees;

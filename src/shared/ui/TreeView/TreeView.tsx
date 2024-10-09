@@ -29,8 +29,6 @@ export const TreeView = ({
   // Toggle expand/collapse
   const toggleExpand = () => setExpanded(!expanded);
 
-  console.log(node);
-
   return (
     <DroppableItem droppableId={`${node.name}--${node?.id.toString()}`} type="NODE">
       <div className="px-6 mb-2">
@@ -38,6 +36,8 @@ export const TreeView = ({
         <DraggableItem draggableId={`first--${node.id.toString()}`} index={index}>
           <div className="flex flex-row items-center gap-4 mb-2" onClick={toggleExpand}>
             {node.children &&
+              node.children.length > 0 &&
+              // Show + or - icon only if children exist
               (expanded ? (
                 <span className="cursor-pointer">
                   <MinusIcon />
@@ -46,7 +46,7 @@ export const TreeView = ({
                 <span className="cursor-pointer">
                   <PlusIcon />
                 </span>
-              ))}{' '}
+              ))}
             {node.name}{' '}
             {!isParent && (
               <span
@@ -64,9 +64,9 @@ export const TreeView = ({
           <>
             <div className="flex flex-row items-center gap-2">
               <Button
-                label="Add new"
+                label="New"
                 onClick={() => handleAddNew(node.id)}
-                className="!bg-white !text-sm !font-normal"
+                className="border-none !bg-white !text-xs !font-normal mb-2"
                 size="sm"
                 iconAfter={<PlusIcon />}
                 shape="rounded"

@@ -1,4 +1,8 @@
+import { useMoveChildTreeMutation } from 'entities/trees';
+import { useCallback } from 'react';
+
 export const useOnDrag = () => {
+  const [moveChild] = useMoveChildTreeMutation();
   const findNodeById = (tree, id) => {
     for (const node of tree) {
       if (node.id === id) {
@@ -30,7 +34,19 @@ export const useOnDrag = () => {
     }, []);
   };
 
-  const onDragAnd = (result, transformedData) => {
+  const findParentNode = (tree, nodeId) => {
+    for (let node of tree) {
+      if (node.children && node.children.some((child) => child.id === nodeId)) {
+        return node; // Return the parent node of the specified child
+      } else if (node.children) {
+        const parentNode = findParentNode(node.children, nodeId);
+        if (parentNode) return parentNode;
+      }
+    }
+    return null; // Parent not found
+  };
+
+  const onDragAnd = useCallback((result, transformedData) => {
     if (!result.destination) {
       return; // No destination means dropped outside
     }
@@ -49,6 +65,8 @@ export const useOnDrag = () => {
     // Create a shallow copy of the current tree data
     const newTreeData = [...transformedData];
 
+    const parentOfDraggedNode = findParentNode(newTreeData, draggedNodeId);
+
     // Remove the dragged node from its original position
     const draggedNode = findNodeById(newTreeData, draggedNodeId);
     const updatedSourceTree = removeNodeById(newTreeData, draggedNodeId);
@@ -62,8 +80,12 @@ export const useOnDrag = () => {
     }
 
     // Update state with the modified tree
-    //handleData(updatedSourceTree);
-  };
+    moveChild({
+      sourceRootId: parentOfDraggedNode?.id,
+      childId: draggedNodeId,
+      targetRootId: destinationParentId
+    });
+  }, []);
 
   return { onDragAnd };
 };

@@ -3,5 +3,6 @@ export {
   useGetTreesQuery,
   useNewTreeMutation,
   useAddRootTreeMutation,
-  useDeleteChildTreeMutation
+  useDeleteChildTreeMutation,
+  useMoveChildTreeMutation
 } from './api/apiTrees';

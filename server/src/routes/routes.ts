@@ -178,50 +178,48 @@ router.delete('/:parentId/:id', (req, res, next) => {
     });
 });
 
-// router.delete('/:id', (req, res, next) => {
-//   const { id } = req.params;
-//   // First, find the node by its ID
-//   TreeNode.find()
-//     .then(async (data) => {
-//       if (!nodeToDelete) {
-//         return res.status(404).json({ message: 'Node not found' });
-//       }
-//
-//       // Recursively delete child nodes
-//       const deleteChildren = async (node: any): Promise<void> => {
-//         if (node.children && node.children.length > 0) {
-//           // Use Promise.all to delete all children concurrently
-//           await Promise.all(
-//             node.children.map(async (child: any) => {
-//               const childNode = await TreeNode.findById(child._id);
-//               if (childNode) {
-//                 // Recursive call to delete the children of the current child
-//                 await deleteChildren(childNode);
-//                 // Delete the child node itself
-//                 await childNode.deleteOne();
-//               }
-//             })
-//           );
-//         }
-//       };
-//
-//       // Delete the children first
-//       await deleteChildren(nodeToDelete);
-//
-//       // Finally, delete the main node
-//       await nodeToDelete.deleteOne();
-//
-//       // After deleting the node and its children, respond to the client
-//       return res.status(200).json({ message: 'Node and its children deleted successfully' });
-//     })
-//     .catch((error) => {
-//       // Handle errors here
-//       console.error(error);
-//       res.status(500).json({
-//         message: error instanceof Error ? error.message : 'An unknown error occurred'
-//       });
-//     });
-// });
+router.patch('/move-child/:sourceRootId/:childId/:targetRootId', async (req, res) => {
+  const { sourceRootId, childId, targetRootId } = req.params;
+  TreeNode.findById(sourceRootId)
+    .then(async (sourceRoot) => {
+      if (!sourceRoot) {
+        return res.status(404).json({ message: 'Source root not found' });
+      }
+
+      const childIndex = sourceRoot.children.findIndex((child) => {
+        // Ensure child._id is of type ObjectId or cast to string
+        return (child._id as Types.ObjectId).toString() === childId;
+      });
+
+      if (childIndex === -1) {
+        return res.status(404).json({ message: 'Child node not found under this parent' });
+      }
+
+      const [childNode] = sourceRoot.children.splice(childIndex, 1);
+
+      const targetRoot = await TreeNode.findById(targetRootId);
+
+      if (!targetRoot) {
+        return res.status(404).json({ message: 'Target root not found' });
+      }
+
+      targetRoot.children.push(childNode);
+      await sourceRoot.save();
+      await targetRoot.save();
+      return res.status(200).json({
+        message: 'Child node moved successfully',
+        sourceRoot,
+        targetRoot
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({
+        message: error instanceof Error ? error.message : 'An unknown error occurred'
+      });
+    });
+});
+
 router.post('/:parentId/children', (req, res, next) => {
   const { parentId } = req.params; // Extract parentId from route parameters
   const { childName } = req.body; // Extract childName from the request body

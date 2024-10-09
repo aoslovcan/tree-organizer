@@ -20,12 +20,11 @@ export const Trees = () => {
   }, []);
 
   const handleDelete = useCallback((id, parentId) => {
-    console.log(id);
     deleteChildTree(id, parentId);
   }, []);
   return (
     <>
-      <DragAndDrop handleOnDragEnd={onDragAnd}>
+      <DragAndDrop handleOnDragEnd={(result) => onDragAnd(result, transformedData)}>
         <div>
           {transformedData &&
             transformedData?.map((rootNode, index) => (

@@ -9,7 +9,7 @@ export const HomePage = () => {
     <div>
       <h1>Simple Tree View</h1>
       <Button
-        label="Add new"
+        label="Add new root"
         onClick={() => openModal('newRootModal')}
         className="!bg-white !text-sm !font-normal"
         size="sm"
