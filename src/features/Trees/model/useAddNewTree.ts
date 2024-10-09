@@ -15,29 +15,34 @@ export const useAddNewTree = () => {
   const { closeModal } = useModal();
   const { showNotification } = useNotification();
 
-  const addTree = useCallback((data, id) => {
-    const response = addNewTree({ id: id, body: data });
-
-    if (!response.error) {
+  const addTree = useCallback(async (data, id) => {
+    try {
+      await addNewTree({ id: id, body: data });
       showNotification('Successfully added', 'SUCCESS');
       closeModal('newTreeModal');
+    } catch (error) {
+      showNotification(error.message, 'ERROR');
     }
   }, []);
 
-  const addRootTree = useCallback((data) => {
-    const response = addRoot({ body: data });
+  const addRootTree = useCallback(async (data) => {
+    try {
+      await addRoot({ body: data });
 
-    if (!response.error) {
       showNotification('Successfully added', 'SUCCESS');
       closeModal('newRootModal');
+    } catch (error) {
+      showNotification(error.message, 'ERROR');
     }
   }, []);
 
-  const deleteChildTree = useCallback((id, parentId) => {
-    const res = deleteTree({ id: id, parentId: parentId });
+  const deleteChildTree = useCallback(async (id, parentId) => {
+    try {
+      await deleteTree({ id: id, parentId: parentId });
 
-    if (!res.error) {
       showNotification('Successfully deleted', 'SUCCESS');
+    } catch (error) {
+      showNotification(error.message, 'ERROR');
     }
   }, []);
 
