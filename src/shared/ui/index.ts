@@ -5,3 +5,4 @@ export { Loader } from './Loader/Loader';
 export { Text } from './Text/Text';
 export { Modal } from './Modal/Modal';
 export { Input } from './Input/Input';
+export { Notification } from './Notification/Notification';

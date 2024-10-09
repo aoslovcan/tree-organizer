@@ -5,6 +5,7 @@ import {
 } from 'entities/trees';
 import { useCallback } from 'react';
 import { useModal } from 'app/modal';
+import { useNotification } from 'app/notification';
 
 export const useAddNewTree = () => {
   const [addNewTree, { isLoading }] = useNewTreeMutation();
@@ -12,11 +13,13 @@ export const useAddNewTree = () => {
   const [deleteTree, { isLoading: isDeleting }] = useDeleteChildTreeMutation();
 
   const { closeModal } = useModal();
+  const { showNotification } = useNotification();
 
   const addTree = useCallback((data, id) => {
     const response = addNewTree({ id: id, body: data });
 
     if (!response.error) {
+      showNotification('Successfully added', 'SUCCESS');
       closeModal('newTreeModal');
     }
   }, []);
@@ -25,12 +28,17 @@ export const useAddNewTree = () => {
     const response = addRoot({ body: data });
 
     if (!response.error) {
+      showNotification('Successfully added', 'SUCCESS');
       closeModal('newRootModal');
     }
   }, []);
 
   const deleteChildTree = useCallback((id, parentId) => {
     const res = deleteTree({ id: id, parentId: parentId });
+
+    if (!res.error) {
+      showNotification('Successfully deleted', 'SUCCESS');
+    }
   }, []);
 
   return {

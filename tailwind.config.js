@@ -10,7 +10,9 @@ export default {
         },
         background: {
           primary: '#C1DCDC',
-          secondary: '#869F9F'
+          secondary: '#869F9F',
+          success: '#008000',
+          error: '#DC3C3C'
         }
       }
     }
