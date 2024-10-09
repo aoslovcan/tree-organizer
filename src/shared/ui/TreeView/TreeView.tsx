@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { MinusIcon, PlusIcon, TrashIcon } from 'shared/assets/icons';
 import { Button, DraggableItem, DroppableItem } from 'shared/ui';
-import { useModal } from '../../../app/modal';
 
 type TreeNode = {
   id: number;
@@ -33,6 +32,7 @@ export const TreeView = ({
     <DroppableItem droppableId={`${node.name}--${node?.id.toString()}`} type="NODE">
       <div className="px-6 mb-2">
         {/* Node label and expand/collapse icon */}
+
         <DraggableItem draggableId={`first--${node.id.toString()}`} index={index}>
           <div className="flex flex-row items-center gap-4 mb-2" onClick={toggleExpand}>
             {node.children &&
