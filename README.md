@@ -1,4 +1,10 @@
-## Before starting
+## Start the backend 
+ Go to server folder and run this command
+### `npm install`
+
+### 'npm run dev'
+
+## Start the web part
 
 ### `npm install`
 
